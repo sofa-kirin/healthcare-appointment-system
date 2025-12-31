@@ -22,11 +22,13 @@ public class AppointmentRepository {
         return null;
     }
 
-    public List<Appointment> findByPatientId(long patientId) {
+    public List<Appointment> findByPatientSocialSecurityNumber(String socialSecurityNumber) {
         List<Appointment> result = new ArrayList<>();
 
         for (int i = 0; i < appointments.size(); i++) {
-            if (appointments.get(i).getPatientId() == patientId) {
+            if (appointments.get(i)
+                    .getPatientSocialSecurityNumber()
+                    .equals(socialSecurityNumber)) {
                 result.add(appointments.get(i));
             }
         }

@@ -19,14 +19,17 @@ public class AppointmentService {
         this.patientRepository = patientRepository;
     }
 
-    public void createAppointment(long patientId,
+    public void createAppointment(String patientSocialSecurityNumber,
                                   long doctorId,
                                   LocalDateTime dateTime,
                                   String reason) {
 
-        if (patientRepository.findById(patientId) == null) {
+        if (patientRepository.findBySocialSecurityNumber(
+                patientSocialSecurityNumber) == null) {
             throw new IllegalArgumentException(
-                    "Patient with id " + patientId + " does not exist"
+                    "Patient with social security number "
+                            + patientSocialSecurityNumber
+                            + " does not exist"
             );
         }
 
@@ -37,7 +40,9 @@ public class AppointmentService {
         }
 
         List<Appointment> patientAppointments =
-                appointmentRepository.findByPatientId(patientId);
+                appointmentRepository.findByPatientSocialSecurityNumber(
+                        patientSocialSecurityNumber
+                );
 
         for (int i = 0; i < patientAppointments.size(); i++) {
             if (patientAppointments.get(i).getDateTime().equals(dateTime)) {
@@ -50,23 +55,35 @@ public class AppointmentService {
         long id = nextId++;
 
         Appointment appointment =
-                new Appointment(id, patientId, doctorId, dateTime, reason);
+                new Appointment(
+                        id,
+                        patientSocialSecurityNumber,
+                        doctorId,
+                        dateTime,
+                        reason
+                );
 
         appointmentRepository.addAppointment(appointment);
     }
 
-    public List<Appointment> getAppointmentsByPatientId(long patientId) {
+    public List<Appointment> getAppointmentsByPatientSocialSecurityNumber(
+            String patientSocialSecurityNumber) {
 
-        if (patientRepository.findById(patientId) == null) {
+        if (patientRepository.findBySocialSecurityNumber(
+                patientSocialSecurityNumber) == null) {
             throw new IllegalArgumentException(
-                    "Patient with id " + patientId + " does not exist"
+                    "Patient with social security number "
+                            + patientSocialSecurityNumber
+                            + " does not exist"
             );
         }
 
-        return appointmentRepository.findByPatientId(patientId);
+        return appointmentRepository
+                .findByPatientSocialSecurityNumber(patientSocialSecurityNumber);
     }
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
     }
 }
+

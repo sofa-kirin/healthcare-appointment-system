@@ -32,7 +32,7 @@ public class AppointmentPresentation {
                     createAppointment();
                     break;
                 case "2":
-                    showAppointmentsByPatientId();
+                    showAppointmentsByPatientSocialSecurityNumber();
                     break;
                 case "3":
                     showAllAppointments();
@@ -50,7 +50,7 @@ public class AppointmentPresentation {
         System.out.println();
         System.out.println("===== Appointment Management =====");
         System.out.println("1 - Create a new appointment");
-        System.out.println("2 - Get appointments by patient id");
+        System.out.println("2 - Get appointments by social security number");
         System.out.println("3 - Get all appointments");
         System.out.println("0 - Back / Exit");
         System.out.println("==================================");
@@ -59,8 +59,8 @@ public class AppointmentPresentation {
 
     private void createAppointment() {
         try {
-            System.out.print("Enter patient ID: ");
-            long patientId = Long.parseLong(scanner.nextLine());
+            System.out.print("Enter patient social security number: ");
+            String ssn = scanner.nextLine();
 
             System.out.print("Enter doctor ID: ");
             long doctorId = Long.parseLong(scanner.nextLine());
@@ -77,7 +77,7 @@ public class AppointmentPresentation {
             String reason = scanner.nextLine();
 
             appointmentService.createAppointment(
-                    patientId,
+                    ssn,
                     doctorId,
                     dateTime,
                     reason
@@ -90,13 +90,14 @@ public class AppointmentPresentation {
         }
     }
 
-    private void showAppointmentsByPatientId() {
+    private void showAppointmentsByPatientSocialSecurityNumber() {
         try {
-            System.out.print("Enter patient ID: ");
-            long patientId = Long.parseLong(scanner.nextLine());
+            System.out.print("Enter patient social security number: ");
+            String ssn = scanner.nextLine();
 
             List<Appointment> appointments =
-                    appointmentService.getAppointmentsByPatientId(patientId);
+                    appointmentService
+                            .getAppointmentsByPatientSocialSecurityNumber(ssn);
 
             if (appointments.isEmpty()) {
                 System.out.println("No appointments found for this patient.");
@@ -126,4 +127,5 @@ public class AppointmentPresentation {
         }
     }
 }
+
 

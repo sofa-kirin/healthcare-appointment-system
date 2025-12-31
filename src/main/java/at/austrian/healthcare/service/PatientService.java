@@ -17,17 +17,29 @@ public class PatientService {
         if (patient == null) {
             throw new IllegalArgumentException("Patient must not be null");
         }
-        if (repository.findById(patient.getId()) != null) {
-            throw new IllegalArgumentException("Patient with id: " + patient.getId() + " already exist");
+
+        if (repository.findBySocialSecurityNumber(
+                patient.getSocialSecurityNumber()) != null) {
+            throw new IllegalArgumentException(
+                    "Patient with social security number: "
+                            + patient.getSocialSecurityNumber()
+                            + " already exists"
+            );
         }
+
         repository.addPatient(patient);
     }
 
-    public Patient getPatientById(long id) {
-        Patient patient = repository.findById(id);
+    public Patient getPatientBySocialSecurityNumber(String socialSecurityNumber) {
+        Patient patient =
+                repository.findBySocialSecurityNumber(socialSecurityNumber);
 
         if (patient == null) {
-            throw new IllegalArgumentException("Patient with id: " + id + " does not exist");
+            throw new IllegalArgumentException(
+                    "Patient with social security number: "
+                            + socialSecurityNumber
+                            + " does not exist"
+            );
         }
 
         return patient;

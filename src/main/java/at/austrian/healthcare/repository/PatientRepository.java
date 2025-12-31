@@ -13,9 +13,11 @@ public class PatientRepository {
         patients.add(patient);
     }
 
-    public Patient findById(long id) {
+    public Patient findBySocialSecurityNumber(String socialSecurityNumber) {
         for (int i = 0; i < patients.size(); i++) {
-            if (patients.get(i).getId() == id) {
+            if (patients.get(i)
+                    .getSocialSecurityNumber()
+                    .equals(socialSecurityNumber)) {
                 return patients.get(i);
             }
         }
@@ -26,3 +28,4 @@ public class PatientRepository {
         return new ArrayList<>(patients);
     }
 }
+

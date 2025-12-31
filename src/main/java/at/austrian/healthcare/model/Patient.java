@@ -2,20 +2,21 @@ package at.austrian.healthcare.model;
 
 public class Patient {
 
-    private final long id;
+    private final String socialSecurityNumber;
     private final String firstName;
     private final String lastName;
-    private final String socialSecurityNumber;
 
-    public Patient(long id, String firstName, String lastName, String socialSecurityNumber) {
-        this.id = id;
+    public Patient(String socialSecurityNumber,
+                   String firstName,
+                   String lastName) {
+
+        this.socialSecurityNumber = socialSecurityNumber;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.socialSecurityNumber = socialSecurityNumber;
     }
 
-    public long getId() {
-        return id;
+    public String getSocialSecurityNumber() {
+        return socialSecurityNumber;
     }
 
     public String getFirstName() {
@@ -26,17 +27,13 @@ public class Patient {
         return lastName;
     }
 
-    public String getSocialSecurityNumber() {
-        return socialSecurityNumber;
-    }
-
     @Override
     public String toString() {
         return "Patient{" +
-                "id: " + id +
+                "socialSecurityNumber: " + socialSecurityNumber +
                 ", firstName: " + firstName +
                 ", lastName: " + lastName +
-                ", socialSecurityNumber: " + socialSecurityNumber +
                 '}';
     }
 }
+

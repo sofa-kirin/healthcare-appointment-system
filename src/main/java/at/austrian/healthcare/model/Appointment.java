@@ -5,18 +5,18 @@ import java.time.LocalDateTime;
 public class Appointment {
 
     private final long id;
-    private final long patientId;
+    private final String patientSocialSecurityNumber;
     private final long doctorId;
     private final LocalDateTime dateTime;
     private final String reason;
 
     public Appointment(long id,
-                       long patientId,
+                       String patientSocialSecurityNumber,
                        long doctorId,
                        LocalDateTime dateTime,
                        String reason) {
         this.id = id;
-        this.patientId = patientId;
+        this.patientSocialSecurityNumber = patientSocialSecurityNumber;
         this.doctorId = doctorId;
         this.dateTime = dateTime;
         this.reason = reason;
@@ -26,8 +26,8 @@ public class Appointment {
         return id;
     }
 
-    public long getPatientId() {
-        return patientId;
+    public String getPatientSocialSecurityNumber() {
+        return patientSocialSecurityNumber;
     }
 
     public long getDoctorId() {
@@ -46,7 +46,7 @@ public class Appointment {
     public String toString() {
         return "Appointment{" +
                 "id=" + id +
-                ", patientId=" + patientId +
+                ", patientSocialSecurityNumber=" + patientSocialSecurityNumber +
                 ", doctorId=" + doctorId +
                 ", dateTime=" + dateTime +
                 ", reason='" + reason + '\'' +
