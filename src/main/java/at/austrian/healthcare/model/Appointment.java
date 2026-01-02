@@ -1,24 +1,27 @@
 package at.austrian.healthcare.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class Appointment {
 
     private final long id;
     private final String patientSocialSecurityNumber;
     private final long doctorId;
-    private final LocalDateTime dateTime;
+    private final LocalDate date;
+    private final LocalTime time;
     private final String reason;
 
     public Appointment(long id,
                        String patientSocialSecurityNumber,
                        long doctorId,
-                       LocalDateTime dateTime,
+                       LocalDate date, LocalTime time,
                        String reason) {
         this.id = id;
         this.patientSocialSecurityNumber = patientSocialSecurityNumber;
         this.doctorId = doctorId;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
         this.reason = reason;
     }
 
@@ -34,8 +37,12 @@ public class Appointment {
         return doctorId;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime(){
+        return time;
     }
 
     public String getReason() {
@@ -48,7 +55,8 @@ public class Appointment {
                 "id=" + id +
                 ", patientSocialSecurityNumber=" + patientSocialSecurityNumber +
                 ", doctorId=" + doctorId +
-                ", dateTime=" + dateTime +
+                ", date=" + date +
+                ", time=" + time +
                 ", reason='" + reason + '\'' +
                 '}';
     }

@@ -2,6 +2,8 @@ package at.austrian.healthcare.repository;
 
 import at.austrian.healthcare.model.Appointment;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +28,45 @@ public class AppointmentRepository {
         List<Appointment> result = new ArrayList<>();
 
         for (int i = 0; i < appointments.size(); i++) {
-            if (appointments.get(i)
-                    .getPatientSocialSecurityNumber()
-                    .equals(socialSecurityNumber)) {
+            if (socialSecurityNumber.equals(
+                    appointments.get(i).getPatientSocialSecurityNumber()))
+            {
+                result.add(appointments.get(i));
+            }
+        }
+
+        return result;
+    }
+
+    public List<Appointment> findByDoctorId(long doctorId){
+        List<Appointment> result = new ArrayList<>();
+
+        for(int i = 0; i < appointments.size(); i++){
+            if (appointments.get(i).getDoctorId() == doctorId ){
+                result.add(appointments.get(i));
+            }
+        }
+
+        return result;
+    }
+
+    public List<Appointment> findByDate(LocalDate date){
+        List<Appointment> result = new ArrayList<>();
+
+        for(int i = 0; i < appointments.size(); i++){
+            if(appointments.get(i).getDate().equals(date)){
+                result.add(appointments.get(i));
+            }
+        }
+
+        return result;
+    }
+
+    public List<Appointment> findByTime(LocalTime time){
+        List<Appointment> result = new ArrayList<>();
+
+        for(int i = 0; i < appointments.size(); i++){
+            if(appointments.get(i).getTime().equals(time)){
                 result.add(appointments.get(i));
             }
         }

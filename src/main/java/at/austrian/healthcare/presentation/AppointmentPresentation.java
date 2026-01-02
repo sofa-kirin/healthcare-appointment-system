@@ -79,7 +79,8 @@ public class AppointmentPresentation {
             appointmentService.createAppointment(
                     ssn,
                     doctorId,
-                    dateTime,
+                    date,
+                    time,
                     reason
             );
 
