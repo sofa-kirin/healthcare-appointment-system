@@ -80,6 +80,41 @@ public class AppointmentService {
         appointmentRepository.addAppointment(appointment);
     }
 
+    public List<Appointment> getByDoctorIdAndPatient(
+            long doctorId,
+            String patientSocialSecurityNumber) {
+
+        if (!doctorService.existsById(doctorId)) {
+            throw new IllegalArgumentException(
+                    "Doctor with ID: " + doctorId + " does not exist"
+            );
+        }
+
+        if (patientRepository.findBySocialSecurityNumber(
+                patientSocialSecurityNumber) == null) {
+            throw new IllegalArgumentException(
+                    "Patient with social security number "
+                            + patientSocialSecurityNumber
+                            + " does not exist"
+            );
+        }
+
+        List<Appointment> doctorAppointments =
+                appointmentRepository.findByDoctorId(doctorId);
+
+        List<Appointment> result = new ArrayList<>();
+
+        for (int i = 0; i < doctorAppointments.size(); i++) {
+            Appointment a = doctorAppointments.get(i);
+
+            if (a.getPatientSocialSecurityNumber()
+                    .equals(patientSocialSecurityNumber)) {
+                result.add(a);
+            }
+        }
+        return result;
+    }
+
     public List<Appointment> getAppointmentsByPatientSocialSecurityNumber(
             String patientSocialSecurityNumber) {
 

@@ -115,14 +115,11 @@ public class AppointmentPresentation {
     }
 
     private void showAllAppointments() {
-        List<Appointment> appointments =
-                appointmentService.getAllAppointments();
-
+        List<Appointment> appointments = appointmentService.getAllAppointments();
         if (appointments.isEmpty()) {
             System.out.println("No appointments found.");
             return;
         }
-
         for (int i = 0; i < appointments.size(); i++) {
             System.out.println(appointments.get(i));
         }

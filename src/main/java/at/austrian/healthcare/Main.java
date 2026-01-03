@@ -30,7 +30,7 @@ public class Main { public static void main(String[] args) {
     // Presentations (UI)
     PatientPresentation patientUI = new PatientPresentation(patientService, scanner);
     AppointmentPresentation appointmentUI = new AppointmentPresentation(appointmentService, scanner);
-    DoctorPresentation doctorUI = new DoctorPresentation(doctorService, scanner);
+    DoctorPresentation doctorUI = new DoctorPresentation(appointmentService, scanner);
 
     // Main Menu
     String choice;
@@ -46,8 +46,21 @@ public class Main { public static void main(String[] args) {
                 appointmentUI.start();
                 break;
             case "3":
-                System.out.println("Doctor menu is not implemented yet.");
-                // doctorUI.start();
+                try {
+                    System.out.print("Enter doctor ID: ");
+                    long doctorId = Long.parseLong(scanner.nextLine());
+
+                    // ПРОВЕРКА СРАЗУ
+                    if (!doctorService.existsById(doctorId)) {
+                        System.out.println("Doctor with ID " + doctorId + " does not exist.");
+                        break;
+                    }
+
+                    doctorUI.start(doctorId);
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid doctor ID. Please enter a number.");
+                }
                 break;
             case "0":
                 System.out.println("Bye!");
