@@ -8,33 +8,29 @@ import java.util.List;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private long nextId = 1;
 
     public DoctorService(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
     }
 
-    public void addDoctor(long id, String firstName, String lastName, String specialization) {
-        if (id <= 0 || firstName == null || lastName == null || specialization == null) {
+    public Doctor addDoctor(String firstName, String lastName, String specialization) {
+        if (firstName == null || lastName == null || specialization == null) {
             throw new IllegalArgumentException("Invalid doctor data");
         }
 
-        if (doctorRepository.existsById(id)) {
-            throw new IllegalArgumentException("Doctor already exists");
-        }
-
-        Doctor doctor = new Doctor(id, firstName, lastName, specialization);
+        Doctor doctor = new Doctor(nextId++, firstName, lastName, specialization);
         doctorRepository.addDoctor(doctor);
+        return doctor;
     }
 
     public Doctor findDoctorById(long id) {
         Doctor doctor = doctorRepository.findDoctorById(id);
-
         if (doctor == null) {
             throw new IllegalArgumentException(
                     "Doctor with ID: " + id + " does not exist"
             );
         }
-
         return doctor;
     }
 

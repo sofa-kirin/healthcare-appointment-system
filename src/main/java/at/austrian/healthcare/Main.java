@@ -24,6 +24,12 @@ public class Main { public static void main(String[] args) {
     // Services
     PatientService patientService = new PatientService(patientRepository);
     DoctorService doctorService = new DoctorService(doctorRepository);
+
+    //  Seed data for demo environment
+    doctorService.addDoctor("John", "Smith", "Cardiology");
+    doctorService.addDoctor("Anna", "Müller", "Dermatology");
+    doctorService.addDoctor("Ivan", "Novak", "Neurology");
+
     AppointmentService appointmentService =
             new AppointmentService(appointmentRepository, patientRepository, doctorService);
 
@@ -70,7 +76,6 @@ public class Main { public static void main(String[] args) {
         }
 
     } while (!choice.equals("0"));
-
 
 }
 
