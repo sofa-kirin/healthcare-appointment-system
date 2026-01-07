@@ -6,22 +6,16 @@ import at.austrian.healthcare.service.PatientService;
 import java.util.List;
 import java.util.Scanner;
 
-public class PatientPresentation {
+public class PatientPresentation extends AbstractMenuPresentation {
 
     private final PatientService patientService;
-    private final Scanner scanner;
 
     public PatientPresentation(PatientService patientService, Scanner scanner) {
+        super(scanner);
         this.patientService = patientService;
-        this.scanner = scanner;
     }
 
-    public void start() {
-        String choice;
-
-        do {
-            printMenu();
-            choice = scanner.nextLine();
+    protected boolean handleChoice(String choice) {
 
             switch (choice) {
                 case "1":
@@ -34,15 +28,16 @@ public class PatientPresentation {
                     getAllPatients();
                     break;
                 case "0":
-                    System.out.println("Exiting...");
-                    break;
+                    System.out.println("Back to main menu...");
+                    return false;
                 default:
                     System.out.println("Unknown option. Please enter 0-3.");
             }
-        } while (!choice.equals("0"));
+            return true;
+
     }
 
-    private void printMenu() {
+    protected void printMenu() {
         System.out.println();
         System.out.println("==== Austrian Healthcare - Patient Menu ====");
         System.out.println("1 - Register a patient");

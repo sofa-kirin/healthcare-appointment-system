@@ -9,23 +9,17 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
-public class AppointmentPresentation {
+public class AppointmentPresentation extends AbstractMenuPresentation {
 
     private final AppointmentService appointmentService;
-    private final Scanner scanner;
 
     public AppointmentPresentation(AppointmentService appointmentService,
                                    Scanner scanner) {
+        super(scanner);
         this.appointmentService = appointmentService;
-        this.scanner = scanner;
     }
 
-    public void start() {
-        String choice;
-
-        do {
-            printMenu();
-            choice = scanner.nextLine();
+    protected boolean handleChoice( String choice) {
 
             switch (choice) {
                 case "1":
@@ -39,14 +33,14 @@ public class AppointmentPresentation {
                     break;
                 case "0":
                     System.out.println("Back to main menu...");
-                    break;
+                    return false;
                 default:
                     System.out.println("Unknown option. Please enter 0-3.");
             }
-        } while (!choice.equals("0"));
+            return true;
     }
 
-    private void printMenu() {
+    protected void printMenu() {
         System.out.println();
         System.out.println("===== Appointment Management =====");
         System.out.println("1 - Create a new appointment");

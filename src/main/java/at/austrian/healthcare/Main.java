@@ -1,83 +1,100 @@
 package at.austrian.healthcare;
 
+import at.austrian.healthcare.presentation.AppointmentPresentation;
 import at.austrian.healthcare.presentation.DoctorPresentation;
-import at.austrian.healthcare.repository.PatientRepository;
-import at.austrian.healthcare.service.DoctorService;
-import at.austrian.healthcare.service.PatientService;
 import at.austrian.healthcare.presentation.PatientPresentation;
 import at.austrian.healthcare.repository.AppointmentRepository;
-import at.austrian.healthcare.service.AppointmentService;
-import at.austrian.healthcare.presentation.AppointmentPresentation;
 import at.austrian.healthcare.repository.DoctorRepository;
+import at.austrian.healthcare.repository.PatientRepository;
+import at.austrian.healthcare.service.AppointmentService;
+import at.austrian.healthcare.service.DoctorService;
+import at.austrian.healthcare.service.PatientService;
 
 import java.util.Scanner;
 
-public class Main { public static void main(String[] args) {
+public class Main {
 
-    Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) {
 
-    // Repositories
-    PatientRepository patientRepository = new PatientRepository();
-    AppointmentRepository appointmentRepository = new AppointmentRepository();
-    DoctorRepository doctorRepository = new DoctorRepository();
+        Scanner scanner = new Scanner(System.in);
 
-    // Services
-    PatientService patientService = new PatientService(patientRepository);
-    DoctorService doctorService = new DoctorService(doctorRepository);
+        // Repositories
+        PatientRepository patientRepository = new PatientRepository();
+        AppointmentRepository appointmentRepository = new AppointmentRepository();
+        DoctorRepository doctorRepository = new DoctorRepository();
 
-    //  Seed data for demo environment
-    doctorService.addDoctor("John", "Smith", "Cardiology");
-    doctorService.addDoctor("Anna", "Müller", "Dermatology");
-    doctorService.addDoctor("Ivan", "Novak", "Neurology");
+        // Services
+        PatientService patientService = new PatientService(patientRepository);
+        DoctorService doctorService = new DoctorService(doctorRepository);
 
-    AppointmentService appointmentService =
-            new AppointmentService(appointmentRepository, patientRepository, doctorService);
+        // Seed data for demo environment
+        doctorService.addDoctor("John", "Smith", "Cardiology");
+        doctorService.addDoctor("Anna", "Müller", "Dermatology");
+        doctorService.addDoctor("Ivan", "Novak", "Neurology");
 
-    // Presentations (UI)
-    PatientPresentation patientUI = new PatientPresentation(patientService, scanner);
-    AppointmentPresentation appointmentUI = new AppointmentPresentation(appointmentService, scanner);
-    DoctorPresentation doctorUI = new DoctorPresentation(appointmentService, scanner);
+        AppointmentService appointmentService =
+                new AppointmentService(appointmentRepository, patientRepository, doctorService);
 
-    // Main Menu
-    String choice;
-    do {
-        printMainMenu();
-        choice = scanner.nextLine().trim();
+        // Presentations (UI without state)
+        PatientPresentation patientUI =
+                new PatientPresentation(patientService, scanner);
 
-        switch (choice) {
-            case "1":
-                patientUI.start();
-                break;
-            case "2":
-                appointmentUI.start();
-                break;
-            case "3":
-                try {
-                    System.out.print("Enter doctor ID: ");
-                    long doctorId = Long.parseLong(scanner.nextLine());
+        AppointmentPresentation appointmentUI =
+                new AppointmentPresentation(appointmentService, scanner);
 
-                    // ПРОВЕРКА СРАЗУ
-                    if (!doctorService.existsById(doctorId)) {
-                        System.out.println("Doctor with ID " + doctorId + " does not exist.");
-                        break;
-                    }
+        // Main Menu
+        String choice;
 
-                    doctorUI.start(doctorId);
+        do {
+            printMainMenu();
+            choice = scanner.nextLine().trim();
 
-                } catch (NumberFormatException e) {
-                    System.out.println("Invalid doctor ID. Please enter a number.");
-                }
-                break;
-            case "0":
-                System.out.println("Bye!");
-                break;
-            default:
-                System.out.println("Unknown option. Please enter 0-3.");
+            switch (choice) {
+                case "1":
+                    patientUI.start();
+                    break;
+
+                case "2":
+                    appointmentUI.start();
+                    break;
+
+                case "3":
+                    handleDoctorMode(scanner, doctorService, appointmentService);
+                    break;
+
+                case "0":
+                    System.out.println("Bye!");
+                    break;
+
+                default:
+                    System.out.println("Unknown option. Please enter 0-3.");
+            }
+
+        } while (!choice.equals("0"));
+    }
+
+    private static void handleDoctorMode(Scanner scanner,
+                                         DoctorService doctorService,
+                                         AppointmentService appointmentService) {
+
+        try {
+            System.out.print("Enter doctor ID: ");
+            long doctorId = Long.parseLong(scanner.nextLine());
+
+            if (!doctorService.existsById(doctorId)) {
+                System.out.println("Doctor with ID " + doctorId + " does not exist.");
+                return;
+            }
+
+            DoctorPresentation doctorUI =
+                    new DoctorPresentation(appointmentService, scanner, doctorId);
+
+            doctorUI.start();
+
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid doctor ID. Please enter a number.");
         }
-
-    } while (!choice.equals("0"));
-
-}
+    }
 
     private static void printMainMenu() {
         System.out.println();
