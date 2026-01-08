@@ -3,7 +3,11 @@ package at.austrian.healthcare.service;
 import at.austrian.healthcare.model.Doctor;
 import at.austrian.healthcare.repository.DoctorRepository;
 
+import javax.print.Doc;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class DoctorService {
 
@@ -32,6 +36,29 @@ public class DoctorService {
             );
         }
         return doctor;
+    }
+
+    public List<String> getAllSpecializations(){
+
+        Set<String> specializations = new HashSet<>();
+        for(Doctor doctor : doctorRepository.findAllDoctors()){
+            specializations.add(doctor.getSpecialization());
+        }
+        return new ArrayList<>(specializations);
+
+    }
+
+    public List<Doctor> getDoctorsBySpecialization(String specialization){
+
+        List<Doctor> result = new ArrayList<>();
+
+        for(Doctor doctor : doctorRepository.findAllDoctors()){
+            if(doctor.getSpecialization().equalsIgnoreCase(specialization)){
+                result.add(doctor);
+            }
+        }
+        return new ArrayList<>(result);
+
     }
 
     public boolean existsById(long id) {
