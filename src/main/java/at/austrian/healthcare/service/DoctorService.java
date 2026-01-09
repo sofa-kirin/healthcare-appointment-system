@@ -3,7 +3,6 @@ package at.austrian.healthcare.service;
 import at.austrian.healthcare.model.Doctor;
 import at.austrian.healthcare.repository.DoctorRepository;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

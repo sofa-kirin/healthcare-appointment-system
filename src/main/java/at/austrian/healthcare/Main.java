@@ -1,8 +1,6 @@
 package at.austrian.healthcare;
 
-import at.austrian.healthcare.presentation.AppointmentPresentation;
-import at.austrian.healthcare.presentation.MainPresentation;
-import at.austrian.healthcare.presentation.PatientPresentation;
+import at.austrian.healthcare.presentation.*;
 import at.austrian.healthcare.repository.AppointmentRepository;
 import at.austrian.healthcare.repository.DoctorRepository;
 import at.austrian.healthcare.repository.PatientRepository;
@@ -34,26 +32,24 @@ public class Main {
                         doctorService
                 );
 
-        // Seed data (demo)
-        doctorService.addDoctor("John", "Smith", "Cardiology");
-        doctorService.addDoctor("Anna", "Müller", "Dermatology");
-        doctorService.addDoctor("Ivan", "Novak", "Neurology");
-
         // Presentations (stateless)
         PatientPresentation patientPresentation =
                 new PatientPresentation(patientService, scanner);
 
-        AppointmentPresentation appointmentPresentation =
-                new AppointmentPresentation(appointmentService, scanner);
+        AdminPresentation adminPresentation =
+                new AdminPresentation(patientService, doctorService, scanner);
+
+        DoctorEntryPresentation doctorEntryPresentation =
+                new DoctorEntryPresentation(scanner, doctorService);
 
         // Main navigation
         MainPresentation mainPresentation =
                 new MainPresentation(
                         scanner,
                         patientPresentation,
-                        appointmentPresentation,
-                        doctorService,
-                        appointmentService
+                        appointmentService,
+                        adminPresentation,
+                        doctorEntryPresentation
                 );
 
         // Start application

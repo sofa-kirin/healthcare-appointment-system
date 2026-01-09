@@ -34,7 +34,6 @@ public class PatientPresentation extends AbstractMenuPresentation {
                     System.out.println("Unknown option. Please enter 0-3.");
             }
             return true;
-
     }
 
     protected void printMenu() {
@@ -43,8 +42,8 @@ public class PatientPresentation extends AbstractMenuPresentation {
         System.out.println("1 - Register a patient");
         System.out.println("2 - Find patient by social security number");
         System.out.println("3 - Show all patients");
-        System.out.println("0 - Exit");
-        System.out.print("Your choice: ");
+        System.out.println("0 - Back");
+        System.out.print("Choose option: ");
     }
 
     private void registerPatient() {
