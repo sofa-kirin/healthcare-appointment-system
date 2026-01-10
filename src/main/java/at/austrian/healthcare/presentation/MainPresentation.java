@@ -7,22 +7,22 @@ import java.util.Scanner;
 public class MainPresentation {
 
     private final Scanner scanner;
-    private final PatientPresentation patientPresentation;
-    private final DoctorEntryPresentation doctorEntryPresentation;
     private final AppointmentService appointmentService;
     private final AdminPresentation adminPresentation;
+    private final DoctorEntryPresentation doctorEntryPresentation;
+    private final PatientEntryPresentation patientEntryPresentation;
 
     public MainPresentation(Scanner scanner,
-                            PatientPresentation patientPresentation,
                             AppointmentService appointmentService,
                             AdminPresentation adminPresentation,
-                            DoctorEntryPresentation doctorEntryPresentation) {
+                            DoctorEntryPresentation doctorEntryPresentation,
+                            PatientEntryPresentation patientEntryPresentation) {
 
         this.scanner = scanner;
-        this.patientPresentation = patientPresentation;
         this.appointmentService = appointmentService;
         this.adminPresentation = adminPresentation;
         this.doctorEntryPresentation = doctorEntryPresentation;
+        this.patientEntryPresentation = patientEntryPresentation;
     }
 
     public void start() {
@@ -34,7 +34,7 @@ public class MainPresentation {
 
             switch (choice) {
                 case "1":
-                    patientPresentation.start();
+                    handlePatientMode();
                     break;
                 case "2":
                     handleDoctorMode();
@@ -52,19 +52,37 @@ public class MainPresentation {
         }
     }
 
-    private void handleDoctorMode(){
-        Long doctorId = doctorEntryPresentation.start();
-
-        if(doctorId == null){
+    private void handlePatientMode() {
+        String ssn = patientEntryPresentation.start();
+        if (ssn == null) {
             return;
         }
-        DoctorPresentation doctorPresentation =  new DoctorPresentation(
-                appointmentService,
-                scanner,
-                doctorId
-        );
-        doctorPresentation.start();
 
+        PatientPresentation patientPresentation =
+                new PatientPresentation(
+                        appointmentService,
+                        ssn,
+                        scanner,
+                        doctorEntryPresentation
+                );
+
+        patientPresentation.start();
+    }
+
+    private void handleDoctorMode() {
+        Long doctorId = doctorEntryPresentation.start();
+        if (doctorId == null) {
+            return;
+        }
+
+        DoctorPresentation doctorPresentation =
+                new DoctorPresentation(
+                        appointmentService,
+                        scanner,
+                        doctorId
+                );
+
+        doctorPresentation.start();
     }
 
     private void printMainMenu() {
@@ -74,8 +92,8 @@ public class MainPresentation {
         System.out.println("2 - Doctor mode");
         System.out.println("3 - Administrator mode");
         System.out.println("0 - Exit");
-        System.out.println("=============================");
         System.out.print("Choose an option: ");
     }
 }
+
 

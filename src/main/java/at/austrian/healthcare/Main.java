@@ -33,27 +33,28 @@ public class Main {
                 );
 
         // Presentations (stateless)
-        PatientPresentation patientPresentation =
-                new PatientPresentation(patientService, scanner);
-
         AdminPresentation adminPresentation =
                 new AdminPresentation(patientService, doctorService, scanner);
 
         DoctorEntryPresentation doctorEntryPresentation =
                 new DoctorEntryPresentation(scanner, doctorService);
 
+        PatientEntryPresentation patientEntryPresentation =
+                new PatientEntryPresentation(scanner, patientService);
+
         // Main navigation
         MainPresentation mainPresentation =
                 new MainPresentation(
                         scanner,
-                        patientPresentation,
                         appointmentService,
                         adminPresentation,
-                        doctorEntryPresentation
+                        doctorEntryPresentation,
+                        patientEntryPresentation
                 );
 
         // Start application
         mainPresentation.start();
     }
 }
+
 

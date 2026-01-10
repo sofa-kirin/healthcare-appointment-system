@@ -13,6 +13,15 @@ public class PatientService {
         this.repository = repository;
     }
 
+    public void registerPatient(String ssn, String firstName, String lastName) {
+        if (ssn == null || firstName == null || lastName == null) {
+            throw new IllegalArgumentException("Invalid patient data");
+        }
+
+        Patient patient = new Patient(ssn, firstName, lastName);
+        registerPatient(patient);
+    }
+
     public void registerPatient(Patient patient) {
         if (patient == null) {
             throw new IllegalArgumentException("Patient must not be null");

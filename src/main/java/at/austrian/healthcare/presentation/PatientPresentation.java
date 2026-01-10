@@ -1,104 +1,105 @@
 package at.austrian.healthcare.presentation;
 
-import at.austrian.healthcare.model.Patient;
-import at.austrian.healthcare.service.PatientService;
+import at.austrian.healthcare.model.Appointment;
+import at.austrian.healthcare.service.AppointmentService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Scanner;
 
 public class PatientPresentation extends AbstractMenuPresentation {
 
-    private final PatientService patientService;
+    private final AppointmentService appointmentService;
+    private final String ssn;
+    private final DoctorEntryPresentation doctorEntryPresentation;
 
-    public PatientPresentation(PatientService patientService, Scanner scanner) {
+    public PatientPresentation(AppointmentService appointmentService,
+                               String ssn, Scanner scanner,
+                               DoctorEntryPresentation doctorEntryPresentation) {
         super(scanner);
-        this.patientService = patientService;
+        this.appointmentService = appointmentService;
+        this.ssn = ssn;
+        this.doctorEntryPresentation = doctorEntryPresentation;
     }
 
     protected boolean handleChoice(String choice) {
 
             switch (choice) {
                 case "1":
-                    registerPatient();
+                    showMyAppointments();
                     break;
                 case "2":
-                    getPatientBySocialSecurityNumber();
-                    break;
-                case "3":
-                    getAllPatients();
+                    createAppointment();
                     break;
                 case "0":
                     System.out.println("Back to main menu...");
                     return false;
                 default:
-                    System.out.println("Unknown option. Please enter 0-3.");
+                    System.out.println("Unknown option. Please enter 0-2.");
             }
             return true;
     }
 
     protected void printMenu() {
         System.out.println();
-        System.out.println("==== Austrian Healthcare - Patient Menu ====");
-        System.out.println("1 - Register a patient");
-        System.out.println("2 - Find patient by social security number");
-        System.out.println("3 - Show all patients");
+        System.out.println("=== Patient Menu ===");
+        System.out.println("1 - Show my appointments");
+        System.out.println("2 - Create appointment");
         System.out.println("0 - Back");
         System.out.print("Choose option: ");
     }
 
-    private void registerPatient() {
-        try {
-            System.out.println("Enter social security number: ");
-            String ssn = scanner.nextLine();
-            System.out.println("Enter first name: ");
-            String firstName = scanner.nextLine();
-            System.out.println("Enter last name: ");
-            String lastName = scanner.nextLine();
-
-            Patient patient = new Patient(ssn, firstName, lastName);
-            patientService.registerPatient(patient);
-
-            System.out.println("Patient registered successfully.");
-        } catch (Exception e) {
-            System.out.println("Cannot register patient: " + e.getMessage());
-        }
-    }
-
-    private void getPatientBySocialSecurityNumber() {
+    private void showMyAppointments(){
         System.out.println();
-        System.out.println("---- Find Patient by Social Security Number ----");
-        try {
-            System.out.println("Enter social security number: ");
-            String ssn = scanner.nextLine();
-            Patient patient =
-                    patientService.getPatientBySocialSecurityNumber(ssn);
-            printPatient(patient);
-        } catch (Exception e) {
-            System.out.println("Not found: " + e.getMessage());
-        }
-    }
+        System.out.println("---- My Appointments ----");
 
-    private void printPatient(Patient patient) {
-        System.out.println();
-        System.out.println("===== Patient Information =====");
-        System.out.println("Social security #:  " + patient.getSocialSecurityNumber());
-        System.out.println("First name:         " + patient.getFirstName());
-        System.out.println("Last name:          " + patient.getLastName());
-        System.out.println("================================");
-    }
+        List<Appointment> appointments = appointmentService.getAppointmentsByPatientSocialSecurityNumber(ssn);
 
-    private void getAllPatients() {
-        System.out.println();
-        System.out.println("---- All Patients ----");
-
-        List<Patient> allPatients = patientService.getAllPatients();
-        if (allPatients.isEmpty()) {
-            System.out.println("(no patients registered)");
+        if(appointments.isEmpty()){
+            System.out.println("(no appointments found)");
             return;
         }
 
-        for (int i = 0; i < allPatients.size(); i++) {
-            System.out.println(allPatients.get(i));
+        for(Appointment appointment: appointments){
+            System.out.println(appointment);
         }
     }
+
+    private void createAppointment(){
+        try {
+            System.out.println();
+            System.out.println("---- Create Appointment ----");
+
+            // 1️⃣ Choose doctor (без ввода id)
+            Long doctorId = doctorEntryPresentation.start();
+            if (doctorId == null) {
+                System.out.println("Appointment creation cancelled.");
+                return;
+            }
+
+            System.out.print("Enter date (YYYY-MM-DD): ");
+            LocalDate date = LocalDate.parse(scanner.nextLine());
+
+            System.out.print("Enter time (HH:MM): ");
+            LocalTime time = LocalTime.parse(scanner.nextLine());
+
+            System.out.print("Enter reason: ");
+            String reason = scanner.nextLine();
+
+            appointmentService.createAppointment(
+                    ssn,
+                    doctorId,
+                    date,
+                    time,
+                    reason
+            );
+
+            System.out.println("Appointment created successfully.");
+
+        } catch (Exception e) {
+            System.out.println("Cannot create appointment: " + e.getMessage());
+        }
+    }
+
 }
