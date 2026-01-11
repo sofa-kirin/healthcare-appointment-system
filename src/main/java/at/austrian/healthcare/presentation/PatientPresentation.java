@@ -71,7 +71,6 @@ public class PatientPresentation extends AbstractMenuPresentation {
             System.out.println();
             System.out.println("---- Create Appointment ----");
 
-            // 1️⃣ Choose doctor (без ввода id)
             Long doctorId = doctorEntryPresentation.start();
             if (doctorId == null) {
                 System.out.println("Appointment creation cancelled.");
@@ -79,13 +78,13 @@ public class PatientPresentation extends AbstractMenuPresentation {
             }
 
             System.out.print("Enter date (YYYY-MM-DD): ");
-            LocalDate date = LocalDate.parse(scanner.nextLine());
+            LocalDate date = LocalDate.parse(scanner.nextLine().trim());
 
             System.out.print("Enter time (HH:MM): ");
-            LocalTime time = LocalTime.parse(scanner.nextLine());
+            LocalTime time = LocalTime.parse(scanner.nextLine().trim());
 
             System.out.print("Enter reason: ");
-            String reason = scanner.nextLine();
+            String reason = scanner.nextLine().trim();
 
             appointmentService.createAppointment(
                     ssn,

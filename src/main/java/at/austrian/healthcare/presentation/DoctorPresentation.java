@@ -80,7 +80,7 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter patient social security number: ");
-            String ssn = scanner.nextLine();
+            String ssn = scanner.nextLine().trim();
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndPatient(doctorId, ssn);
@@ -105,7 +105,7 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter date (YYYY-MM-DD): ");
-            LocalDate date = LocalDate.parse(scanner.nextLine());
+            LocalDate date = LocalDate.parse(scanner.nextLine().trim());
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndDate(doctorId, date);
@@ -130,7 +130,7 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter time (HH:MM): ");
-            LocalTime time = LocalTime.parse(scanner.nextLine());
+            LocalTime time = LocalTime.parse(scanner.nextLine().trim());
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndTime(doctorId, time);

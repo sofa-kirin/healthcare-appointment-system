@@ -14,7 +14,7 @@ public abstract class AbstractMenuPresentation {
         boolean running = true;
         while(running){
             printMenu();
-            String choice = scanner.nextLine();
+            String choice = scanner.nextLine().trim();
             running = handleChoice(choice);
         }
     }

@@ -60,13 +60,13 @@ public class AdminPresentation extends AbstractMenuPresentation {
     private void addPatient() {
         try {
             System.out.print("Enter social security number: ");
-            String ssn = scanner.nextLine();
+            String ssn = scanner.nextLine().trim();
 
             System.out.print("Enter first name: ");
-            String firstName = scanner.nextLine();
+            String firstName = scanner.nextLine().trim();
 
             System.out.print("Enter last name: ");
-            String lastName = scanner.nextLine();
+            String lastName = scanner.nextLine().trim();
 
             Patient patient = new Patient(ssn, firstName, lastName);
             patientService.registerPatient(patient);
@@ -98,13 +98,13 @@ public class AdminPresentation extends AbstractMenuPresentation {
         System.out.println("---- Add Doctor ----");
 
         System.out.print("First name: ");
-        String firstName = scanner.nextLine();
+        String firstName = scanner.nextLine().trim();
 
         System.out.print("Last name: ");
-        String lastName = scanner.nextLine();
+        String lastName = scanner.nextLine().trim();
 
         System.out.print("Specialization: ");
-        String specialization = scanner.nextLine();
+        String specialization = scanner.nextLine().trim();
 
         doctorService.addDoctor(firstName, lastName, specialization);
 

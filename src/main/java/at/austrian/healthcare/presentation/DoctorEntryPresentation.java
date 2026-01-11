@@ -35,7 +35,7 @@ public class DoctorEntryPresentation {
             System.out.println("0 - Back");
             System.out.print("Your choice: ");
 
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
 
             if (input.equals("0")) {
                 return null;
@@ -83,7 +83,7 @@ public class DoctorEntryPresentation {
             System.out.println("0 - Back");
             System.out.print("Choose doctor: ");
 
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
 
             if (input.equals("0")) {
                 return null;
