@@ -1,6 +1,7 @@
 package at.austrian.healthcare.presentation;
 
 import at.austrian.healthcare.service.AppointmentService;
+import at.austrian.healthcare.util.InputValidator;
 
 import java.util.Scanner;
 
@@ -30,24 +31,28 @@ public class MainPresentation {
 
         while (running) {
             printMainMenu();
-            String choice = scanner.nextLine().trim();
+            String input = scanner.nextLine();
 
-            switch (choice) {
-                case "1":
-                    handlePatientMode();
-                    break;
-                case "2":
-                    handleDoctorMode();
-                    break;
-                case "3":
-                    adminPresentation.start();
-                    break;
-                case "0":
-                    System.out.println("Bye!");
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Unknown option. Please enter 0-3.");
+            try {
+                int choice = InputValidator.requireIntInRange(
+                        input,
+                        "Menu choice",
+                        0,
+                        3
+                );
+
+                switch (choice) {
+                    case 1 -> handlePatientMode();
+                    case 2 -> handleDoctorMode();
+                    case 3 -> adminPresentation.start();
+                    case 0 -> {
+                        System.out.println("Bye!");
+                        running = false;
+                    }
+                }
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }

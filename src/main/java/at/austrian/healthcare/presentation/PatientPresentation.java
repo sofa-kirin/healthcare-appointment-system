@@ -2,6 +2,7 @@ package at.austrian.healthcare.presentation;
 
 import at.austrian.healthcare.model.Appointment;
 import at.austrian.healthcare.service.AppointmentService;
+import at.austrian.healthcare.util.InputValidator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -15,7 +16,8 @@ public class PatientPresentation extends AbstractMenuPresentation {
     private final DoctorEntryPresentation doctorEntryPresentation;
 
     public PatientPresentation(AppointmentService appointmentService,
-                               String ssn, Scanner scanner,
+                               String ssn,
+                               Scanner scanner,
                                DoctorEntryPresentation doctorEntryPresentation) {
         super(scanner);
         this.appointmentService = appointmentService;
@@ -23,24 +25,33 @@ public class PatientPresentation extends AbstractMenuPresentation {
         this.doctorEntryPresentation = doctorEntryPresentation;
     }
 
+    @Override
     protected boolean handleChoice(String choice) {
+        try {
+            int option = InputValidator.requireIntInRange(
+                    choice,
+                    "Menu choice",
+                    0,
+                    2
+            );
 
-            switch (choice) {
-                case "1":
-                    showMyAppointments();
-                    break;
-                case "2":
-                    createAppointment();
-                    break;
-                case "0":
+            switch (option) {
+                case 1 -> showMyAppointments();
+                case 2 -> createAppointment();
+                case 0 -> {
                     System.out.println("Back to main menu...");
                     return false;
-                default:
-                    System.out.println("Unknown option. Please enter 0-2.");
+                }
             }
-            return true;
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        return true;
     }
 
+    @Override
     protected void printMenu() {
         System.out.println();
         System.out.println("=== Patient Menu ===");
@@ -50,23 +61,24 @@ public class PatientPresentation extends AbstractMenuPresentation {
         System.out.print("Choose option: ");
     }
 
-    private void showMyAppointments(){
+    private void showMyAppointments() {
         System.out.println();
         System.out.println("---- My Appointments ----");
 
-        List<Appointment> appointments = appointmentService.getAppointmentsByPatientSocialSecurityNumber(ssn);
+        List<Appointment> appointments =
+                appointmentService.getAppointmentsByPatientSocialSecurityNumber(ssn);
 
-        if(appointments.isEmpty()){
+        if (appointments.isEmpty()) {
             System.out.println("(no appointments found)");
             return;
         }
 
-        for(Appointment appointment: appointments){
+        for (Appointment appointment : appointments) {
             System.out.println(appointment);
         }
     }
 
-    private void createAppointment(){
+    private void createAppointment() {
         try {
             System.out.println();
             System.out.println("---- Create Appointment ----");
@@ -78,13 +90,22 @@ public class PatientPresentation extends AbstractMenuPresentation {
             }
 
             System.out.print("Enter date (YYYY-MM-DD): ");
-            LocalDate date = LocalDate.parse(scanner.nextLine().trim());
+            LocalDate date = InputValidator.requireDate(
+                    scanner.nextLine(),
+                    "Date"
+            );
 
             System.out.print("Enter time (HH:MM): ");
-            LocalTime time = LocalTime.parse(scanner.nextLine().trim());
+            LocalTime time = InputValidator.requireTime(
+                    scanner.nextLine(),
+                    "Time"
+            );
 
             System.out.print("Enter reason: ");
-            String reason = scanner.nextLine().trim();
+            String reason = InputValidator.requireNonBlank(
+                    scanner.nextLine(),
+                    "Reason"
+            );
 
             appointmentService.createAppointment(
                     ssn,
@@ -96,9 +117,8 @@ public class PatientPresentation extends AbstractMenuPresentation {
 
             System.out.println("Appointment created successfully.");
 
-        } catch (Exception e) {
-            System.out.println("Cannot create appointment: " + e.getMessage());
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
-
 }

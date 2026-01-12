@@ -2,6 +2,7 @@ package at.austrian.healthcare.presentation;
 
 import at.austrian.healthcare.model.Doctor;
 import at.austrian.healthcare.service.DoctorService;
+import at.austrian.healthcare.util.InputValidator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -35,25 +36,24 @@ public class DoctorEntryPresentation {
             System.out.println("0 - Back");
             System.out.print("Your choice: ");
 
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine();
 
-            if (input.equals("0")) {
+            if (input.trim().equals("0")) {
                 return null;
             }
 
             try {
-                int index = Integer.parseInt(input) - 1;
-
-                if (index < 0 || index >= specializations.size()) {
-                    System.out.println("Invalid choice.");
-                    continue;
-                }
+                int index = InputValidator.requireValidIndex(
+                        input,
+                        specializations.size(),
+                        "Specialization choice"
+                ) - 1;
 
                 String specialization = specializations.get(index);
                 return selectDoctorBySpecialization(specialization);
 
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a number.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
@@ -83,26 +83,26 @@ public class DoctorEntryPresentation {
             System.out.println("0 - Back");
             System.out.print("Choose doctor: ");
 
-            String input = scanner.nextLine().trim();
+            String input = scanner.nextLine();
 
-            if (input.equals("0")) {
+            if (input.trim().equals("0")) {
                 return null;
             }
 
             try {
-                int index = Integer.parseInt(input) - 1;
-
-                if (index < 0 || index >= doctors.size()) {
-                    System.out.println("Invalid choice.");
-                    continue;
-                }
+                int index = InputValidator.requireValidIndex(
+                        input,
+                        doctors.size(),
+                        "Doctor choice"
+                ) - 1;
 
                 return doctors.get(index).getId();
 
-            } catch (NumberFormatException e) {
-                System.out.println("Please enter a number.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
             }
         }
     }
 }
+
 

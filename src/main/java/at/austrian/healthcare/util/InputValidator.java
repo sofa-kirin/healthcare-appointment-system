@@ -99,4 +99,36 @@ public class InputValidator {
         }
         return index;
     }
+
+    public static String requireDigitsMaxLength(
+            String input,
+            String fieldName,
+            int maxLength
+    ) {
+        String value = requireOnlyDigits(input, fieldName);
+
+        if (value.length() > maxLength) {
+            throw new IllegalArgumentException(
+                    fieldName + " must not exceed " + maxLength + " digits"
+            );
+        }
+
+        return value;
+    }
+
+    public static String requireDigitsMinLength(
+            String input,
+            String fieldName,
+            int minLength
+    ) {
+        String value = requireOnlyDigits(input, fieldName);
+
+        if (value.length() < minLength) {
+            throw new IllegalArgumentException(
+                    fieldName + " must contain at least " + minLength + " digits"
+            );
+        }
+
+        return value;
+    }
 }

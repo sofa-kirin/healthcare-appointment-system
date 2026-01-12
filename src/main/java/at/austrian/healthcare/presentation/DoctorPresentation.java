@@ -2,6 +2,7 @@ package at.austrian.healthcare.presentation;
 
 import at.austrian.healthcare.model.Appointment;
 import at.austrian.healthcare.service.AppointmentService;
+import at.austrian.healthcare.util.InputValidator;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -35,25 +36,29 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
     @Override
     protected boolean handleChoice(String choice) {
-        switch (choice) {
-            case "1":
-                showAllAppointments();
-                break;
-            case "2":
-                showAppointmentsByPatient();
-                break;
-            case "3":
-                showAppointmentsByDate();
-                break;
-            case "4":
-                showAppointmentsByTime();
-                break;
-            case "0":
-                System.out.println("Back to previous menu...");
-                return false;
-            default:
-                System.out.println("Unknown option. Please enter 0-4.");
+        try {
+            int option = InputValidator.requireIntInRange(
+                    choice,
+                    "Menu choice",
+                    0,
+                    4
+            );
+
+            switch (option) {
+                case 1 -> showAllAppointments();
+                case 2 -> showAppointmentsByPatient();
+                case 3 -> showAppointmentsByDate();
+                case 4 -> showAppointmentsByTime();
+                case 0 -> {
+                    System.out.println("Back to previous menu...");
+                    return false;
+                }
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+
         return true;
     }
 
@@ -80,7 +85,11 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter patient social security number: ");
-            String ssn = scanner.nextLine().trim();
+            String ssn = InputValidator.requireDigitsMinLength(
+                    scanner.nextLine(),
+                    "Social security number",
+                    12
+            );
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndPatient(doctorId, ssn);
@@ -94,7 +103,7 @@ public class DoctorPresentation extends AbstractMenuPresentation {
                 System.out.println(appointment);
             }
 
-        } catch (Exception e) {
+        } catch (IllegalArgumentException | IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
@@ -105,7 +114,10 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter date (YYYY-MM-DD): ");
-            LocalDate date = LocalDate.parse(scanner.nextLine().trim());
+            LocalDate date = InputValidator.requireDate(
+                    scanner.nextLine(),
+                    "Date"
+            );
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndDate(doctorId, date);
@@ -119,8 +131,8 @@ public class DoctorPresentation extends AbstractMenuPresentation {
                 System.out.println(appointment);
             }
 
-        } catch (Exception e) {
-            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -130,7 +142,10 @@ public class DoctorPresentation extends AbstractMenuPresentation {
 
         try {
             System.out.print("Enter time (HH:MM): ");
-            LocalTime time = LocalTime.parse(scanner.nextLine().trim());
+            LocalTime time = InputValidator.requireTime(
+                    scanner.nextLine(),
+                    "Time"
+            );
 
             List<Appointment> appointments =
                     appointmentService.getByDoctorIdAndTime(doctorId, time);
@@ -144,8 +159,8 @@ public class DoctorPresentation extends AbstractMenuPresentation {
                 System.out.println(appointment);
             }
 
-        } catch (Exception e) {
-            System.out.println("Invalid time format. Please use HH:MM.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 }

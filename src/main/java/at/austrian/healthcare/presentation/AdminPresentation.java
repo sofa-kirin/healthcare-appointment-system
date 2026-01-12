@@ -4,6 +4,7 @@ import at.austrian.healthcare.model.Doctor;
 import at.austrian.healthcare.model.Patient;
 import at.austrian.healthcare.service.DoctorService;
 import at.austrian.healthcare.service.PatientService;
+import at.austrian.healthcare.util.InputValidator;
 
 import java.util.List;
 import java.util.Scanner;
@@ -35,45 +36,68 @@ public class AdminPresentation extends AbstractMenuPresentation {
 
     @Override
     protected boolean handleChoice(String choice) {
-        switch (choice) {
-            case "1":
-                addPatient();
-                break;
-            case "2":
-                showAllPatients();
-                break;
-            case "3":
-                addDoctor();
-                break;
-            case "4":
-                showAllDoctors();
-                break;
-            case "0":
-                System.out.println("Back to previous menu...");
-                return false;
-            default:
-                System.out.println("Unknown option. Please enter 0-4.");
+        try {
+            int option = InputValidator.requireIntInRange(
+                    choice,
+                    "Menu choice",
+                    0,
+                    4
+            );
+
+            switch (option) {
+                case 1:
+                    addPatient();
+                    break;
+                case 2:
+                    showAllPatients();
+                    break;
+                case 3:
+                    addDoctor();
+                    break;
+                case 4:
+                    showAllDoctors();
+                    break;
+                case 0:
+                    System.out.println("Back to previous menu...");
+                    return false;
+            }
+
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
         }
+
         return true;
     }
 
     private void addPatient() {
         try {
             System.out.print("Enter social security number: ");
-            String ssn = scanner.nextLine().trim();
+            String ssn = InputValidator.requireDigitsMinLength(
+                    scanner.nextLine(),
+                    "Social security number",
+                    8
+            );
 
             System.out.print("Enter first name: ");
-            String firstName = scanner.nextLine().trim();
+            String firstName = InputValidator.requireOnlyLetters(
+                    scanner.nextLine(),
+                    "First name"
+            );
 
             System.out.print("Enter last name: ");
-            String lastName = scanner.nextLine().trim();
+            String lastName = InputValidator.requireOnlyLetters(
+                    scanner.nextLine(),
+                    "Last name"
+            );
 
-            Patient patient = new Patient(ssn, firstName, lastName);
-            patientService.registerPatient(patient);
+            patientService.registerPatient(
+                    new Patient(ssn, firstName, lastName)
+            );
 
             System.out.println("Patient registered successfully.");
-        } catch (Exception e) {
-            System.out.println("Cannot register patient: " + e.getMessage());
+
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
         }
     }
 
@@ -94,21 +118,32 @@ public class AdminPresentation extends AbstractMenuPresentation {
     }
 
     private void addDoctor() {
-        System.out.println();
-        System.out.println("---- Add Doctor ----");
+        try {
+            System.out.print("Enter first name: ");
+            String firstName = InputValidator.requireOnlyLetters(
+                    scanner.nextLine(),
+                    "First name"
+            );
 
-        System.out.print("First name: ");
-        String firstName = scanner.nextLine().trim();
+            System.out.print("Enter last name: ");
+            String lastName = InputValidator.requireOnlyLetters(
+                    scanner.nextLine(),
+                    "Last name"
+            );
 
-        System.out.print("Last name: ");
-        String lastName = scanner.nextLine().trim();
+            System.out.print("Enter specialization: ");
+            String specialization = InputValidator.requireNonBlank(
+                    scanner.nextLine(),
+                    "Specialization"
+            );
 
-        System.out.print("Specialization: ");
-        String specialization = scanner.nextLine().trim();
+            doctorService.addDoctor(firstName, lastName, specialization);
 
-        doctorService.addDoctor(firstName, lastName, specialization);
+            System.out.println("Doctor added successfully.");
 
-        System.out.println("Doctor added successfully.");
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
     }
 
     private void showAllDoctors() {
