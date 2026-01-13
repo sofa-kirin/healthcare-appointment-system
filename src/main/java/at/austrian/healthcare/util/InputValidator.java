@@ -55,7 +55,7 @@ public class InputValidator {
     }
 
     public static int requireIntInRange(String input, String fieldName, int min, int max){
-        int value = requirePositiveInt(input, fieldName);
+        int value = Integer.parseInt(requireOnlyDigits(input, fieldName));
         if (value < min || value > max) {
             throw new IllegalArgumentException(
                     fieldName + " must be between " + min + " and " + max
