@@ -3,7 +3,6 @@ package at.austrian.healthcare.service;
 import at.austrian.healthcare.model.Appointment;
 import at.austrian.healthcare.repository.AppointmentRepository;
 import at.austrian.healthcare.repository.PatientRepository;
-import at.austrian.healthcare.service.DoctorService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

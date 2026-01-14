@@ -43,7 +43,6 @@ public class AdminPresentation extends AbstractMenuPresentation {
                     0,
                     4
             );
-
             switch (option) {
                 case 1:
                     addPatient();
@@ -117,7 +116,7 @@ public class AdminPresentation extends AbstractMenuPresentation {
                 );
 
                 System.out.println("Patient registered successfully.");
-                return; // ← ВАЖНО
+                return;
 
             } catch (IllegalArgumentException | IllegalStateException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -137,9 +136,20 @@ public class AdminPresentation extends AbstractMenuPresentation {
             return;
         }
 
+        System.out.println("--------------------------------------------------");
+        System.out.println("SSN          | Name");
+        System.out.println("--------------------------------------------------");
+
         for (Patient patient : patients) {
-            System.out.println(patient);
+            System.out.printf(
+                    "%-12s | %s %s%n",
+                    patient.getSocialSecurityNumber(),
+                    patient.getFirstName(),
+                    patient.getLastName()
+            );
         }
+
+        System.out.println("--------------------------------------------------");
     }
 
     private void addDoctor() {
@@ -196,7 +206,6 @@ public class AdminPresentation extends AbstractMenuPresentation {
         }
     }
 
-
     private void showAllDoctors() {
         System.out.println();
         System.out.println("---- All Doctors ----");
@@ -208,8 +217,20 @@ public class AdminPresentation extends AbstractMenuPresentation {
             return;
         }
 
+        System.out.println("--------------------------------------------------");
+        System.out.println("ID | Name              | Specialization");
+        System.out.println("--------------------------------------------------");
+
         for (Doctor doctor : doctors) {
-            System.out.println(doctor);
+            System.out.printf(
+                    "%-2d | %-17s | %s%n",
+                    doctor.getId(),
+                    doctor.getFirstName() + " " + doctor.getLastName(),
+                    doctor.getSpecialization()
+            );
         }
+
+        System.out.println("--------------------------------------------------");
+
     }
 }

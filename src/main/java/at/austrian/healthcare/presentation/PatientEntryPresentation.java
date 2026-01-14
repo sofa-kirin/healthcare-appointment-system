@@ -33,7 +33,7 @@ public class PatientEntryPresentation {
                 String ssn = InputValidator.requireDigitsMinLength(
                         input,
                         "Social security number",
-                        12
+                        8
                 );
 
                 Patient patient =
