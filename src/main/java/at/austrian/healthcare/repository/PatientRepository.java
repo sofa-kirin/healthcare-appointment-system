@@ -13,6 +13,10 @@ public class PatientRepository {
         patients.add(patient);
     }
 
+    public boolean deleteById(String ssn) {
+        return patients.removeIf(d -> d.getSocialSecurityNumber().equals(ssn));
+    }
+
     public Patient findBySocialSecurityNumber(String socialSecurityNumber) {
         for (int i = 0; i < patients.size(); i++) {
             if (patients.get(i)

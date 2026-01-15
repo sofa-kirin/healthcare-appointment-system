@@ -27,6 +27,95 @@ public class DoctorService {
         return doctor;
     }
 
+    public void deleteDoctor(String firstName,
+                             String lastName,
+                             String specialization) {
+
+        Doctor doctor = validateAndFindDoctor(
+                firstName, lastName, specialization
+        );
+
+        doctorRepository.deleteById(doctor.getId());
+    }
+
+    public void validateFirstNameOrThrow(String firstName) {
+        firstName = firstName.trim();
+
+        for (Doctor d : doctorRepository.findAllDoctors()) {
+            if (d.getFirstName().equalsIgnoreCase(firstName)) {
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException(
+                "No doctor with first name: " + firstName
+        );
+    }
+
+    public void validateFullNameOrThrow(String firstName, String lastName) {
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+
+        for (Doctor d : doctorRepository.findAllDoctors()) {
+            if (d.getFirstName().equalsIgnoreCase(firstName)
+                    && d.getLastName().equalsIgnoreCase(lastName)) {
+                return;
+            }
+        }
+
+        throw new IllegalArgumentException(
+                "No doctor " + firstName + " " + lastName
+        );
+    }
+
+    private Doctor validateAndFindDoctor(
+            String firstName,
+            String lastName,
+            String specialization) {
+
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+        specialization = specialization.trim();
+
+        boolean firstNameExists = false;
+        boolean fullNameExists = false;
+
+        for (Doctor doctor : doctorRepository.findAllDoctors()) {
+
+            if (doctor.getFirstName().equalsIgnoreCase(firstName)) {
+                firstNameExists = true;
+            }
+
+            if (doctor.getFirstName().equalsIgnoreCase(firstName)
+                    && doctor.getLastName().equalsIgnoreCase(lastName)) {
+                fullNameExists = true;
+            }
+
+            if (doctor.getFirstName().equalsIgnoreCase(firstName)
+                    && doctor.getLastName().equalsIgnoreCase(lastName)
+                    && doctor.getSpecialization().equalsIgnoreCase(specialization)) {
+                return doctor;
+            }
+        }
+
+        if (!firstNameExists) {
+            throw new IllegalArgumentException(
+                    "No doctor with first name: " + firstName
+            );
+        }
+
+        if (!fullNameExists) {
+            throw new IllegalArgumentException(
+                    "No doctor " + firstName + " " + lastName
+            );
+        }
+
+        throw new IllegalArgumentException(
+                "Doctor " + firstName + " " + lastName +
+                        " is not specialized in " + specialization
+        );
+    }
+
     public Doctor findDoctorById(long id) {
         Doctor doctor = doctorRepository.findDoctorById(id);
         if (doctor == null) {
@@ -67,5 +156,6 @@ public class DoctorService {
     public List<Doctor> findAllDoctors() {
         return doctorRepository.findAllDoctors();
     }
+
 }
 

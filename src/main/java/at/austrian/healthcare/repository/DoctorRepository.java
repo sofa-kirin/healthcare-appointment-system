@@ -13,6 +13,10 @@ public class DoctorRepository {
         doctors.add(doctor);
     }
 
+    public boolean deleteById(long id) {
+        return doctors.removeIf(d -> d.getId() == id);
+    }
+
     public Doctor findDoctorById(long id) {
         for (int i = 0; i < doctors.size(); i++) {
             if (doctors.get(i).getId() == id) {

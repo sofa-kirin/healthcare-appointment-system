@@ -29,7 +29,8 @@ public class AdminPresentation extends AbstractMenuPresentation {
         System.out.println("1 - Add patient");
         System.out.println("2 - Show all patients");
         System.out.println("3 - Add doctor");
-        System.out.println("4 - Show all doctors");
+        System.out.println("4 - Delete doctor");
+        System.out.println("5 - Show all doctors");
         System.out.println("0 - Back");
         System.out.print("Choose option: ");
     }
@@ -41,7 +42,7 @@ public class AdminPresentation extends AbstractMenuPresentation {
                     choice,
                     "Menu choice",
                     0,
-                    4
+                    5
             );
             switch (option) {
                 case 1:
@@ -54,6 +55,9 @@ public class AdminPresentation extends AbstractMenuPresentation {
                     addDoctor();
                     break;
                 case 4:
+                    deleteDoctor();
+                    break;
+                case 5:
                     showAllDoctors();
                     break;
                 case 0:
@@ -200,6 +204,54 @@ public class AdminPresentation extends AbstractMenuPresentation {
                 return;
 
             } catch (IllegalArgumentException | IllegalStateException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            }
+        }
+    }
+
+    private void deleteDoctor() {
+        while (true) {
+            try {
+                if (doctorService.findAllDoctors().isEmpty()) {
+                    System.out.println("(no doctors found)");
+                    return;
+                }
+
+                System.out.print("Enter first name (0 to cancel): ");
+                String firstName = scanner.nextLine().trim();
+
+                if (firstName.equals("0")) {
+                    System.out.println("Cancelled.");
+                    return;
+                }
+
+                doctorService.validateFirstNameOrThrow(firstName);
+
+                System.out.print("Enter last name (0 to cancel): ");
+                String lastName = scanner.nextLine().trim();
+
+                if (lastName.equals("0")) {
+                    System.out.println("Cancelled.");
+                    return;
+                }
+
+                doctorService.validateFullNameOrThrow(firstName, lastName);
+
+                System.out.print("Enter specialization (0 to cancel): ");
+                String specialization = scanner.nextLine().trim();
+
+                if (specialization.equals("0")) {
+                    System.out.println("Cancelled.");
+                    return;
+                }
+
+                doctorService.deleteDoctor(firstName, lastName, specialization);
+
+                System.out.println("Doctor deleted successfully.");
+                return;
+
+            } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
                 System.out.println("Please try again.\n");
             }
