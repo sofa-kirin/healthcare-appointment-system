@@ -10,7 +10,7 @@ This is an educational <strong>pet project</strong> focused on clean backend des
 and practical Java development.
 </p>
 
-<h2>📌 Project Overview</h2>
+<h2> Project Overview</h2>
 
 <ul>
   <li>manage patients and doctors</li>
@@ -23,7 +23,7 @@ The application currently works <strong>without authentication</strong>.
 User roles are handled through separate menus and workflows.
 </p>
 
-<h2>🧭 Application Menus</h2>
+<h2> Application Menus</h2>
 
 <h3>Administrator</h3>
 <ul>
@@ -48,7 +48,7 @@ User roles are handled through separate menus and workflows.
   <li>Create an appointment</li>
 </ul>
 
-<h2>🏗️ Architecture</h2>
+<h2> Architecture</h2>
 
 <pre>
 presentation → service → repository → model
@@ -61,7 +61,7 @@ presentation → service → repository → model
   <li><strong>Presentation</strong> — CLI menus and user interaction</li>
 </ul>
 
-<h2>🛠️ Technologies &amp; Tools</h2>
+<h2> Technologies &amp; Tools</h2>
 
 <table>
   <tr>
@@ -111,7 +111,7 @@ at.austrian.healthcare
   <li>Use the console menu to interact with the system</li>
 </ol>
 
-<h2>🚀 Planned Improvements</h2>
+<h2> Planned Improvements</h2>
 
 <ul>
   <li>Authentication (admin, doctor, patient login)</li>
