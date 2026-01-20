@@ -39,6 +39,26 @@ public class PatientService {
         repository.addPatient(patient);
     }
 
+    public void deletePatient(String ssn) {
+        Patient patient = findPatientBySsnOrThrow(ssn);
+        repository.deleteById(patient.getSocialSecurityNumber());
+    }
+
+
+    private Patient findPatientBySsnOrThrow(String ssn) {
+        if (ssn == null) {
+            throw new IllegalArgumentException("SSN cannot be null");
+        }
+        ssn = ssn.trim();
+        for (Patient patient : repository.findAll()) {
+            if (patient.getSocialSecurityNumber().equalsIgnoreCase(ssn)) {
+                return patient;
+            }
+        }
+        throw new IllegalArgumentException("Patient with SSN " + ssn + " does not exist");
+    }
+
+
     public Patient getPatientBySocialSecurityNumber(String socialSecurityNumber) {
         Patient patient =
                 repository.findBySocialSecurityNumber(socialSecurityNumber);

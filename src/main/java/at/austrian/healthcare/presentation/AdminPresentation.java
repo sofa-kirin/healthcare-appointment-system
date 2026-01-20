@@ -27,10 +27,11 @@ public class AdminPresentation extends AbstractMenuPresentation {
         System.out.println();
         System.out.println("=== Admin Menu ===");
         System.out.println("1 - Add patient");
-        System.out.println("2 - Show all patients");
-        System.out.println("3 - Add doctor");
-        System.out.println("4 - Delete doctor");
-        System.out.println("5 - Show all doctors");
+        System.out.println("2 - Delete patient");
+        System.out.println("3 - Show all patients");
+        System.out.println("4 - Add doctor");
+        System.out.println("5 - Delete doctor");
+        System.out.println("6 - Show all doctors");
         System.out.println("0 - Back");
         System.out.print("Choose option: ");
     }
@@ -49,17 +50,19 @@ public class AdminPresentation extends AbstractMenuPresentation {
                     addPatient();
                     break;
                 case 2:
-                    showAllPatients();
+                    deletePatient();
                     break;
                 case 3:
-                    addDoctor();
+                    showAllPatients();
                     break;
                 case 4:
-                    deleteDoctor();
+                    addDoctor();
                     break;
                 case 5:
-                    showAllDoctors();
+                    deleteDoctor();
                     break;
+                case 6:
+                    showAllDoctors();
                 case 0:
                     System.out.println("Back to previous menu...");
                     return false;
@@ -210,6 +213,34 @@ public class AdminPresentation extends AbstractMenuPresentation {
         }
     }
 
+    private void deletePatient() {
+        while (true) {
+            try {
+                if (patientService.getAllPatients().isEmpty()) {
+                    System.out.println("(no patients found)");
+                    return;
+                }
+
+                System.out.print("Enter Social Security Number (0 to cancel): ");
+                String ssnInput = scanner.nextLine();
+
+                if (ssnInput.equals("0")) {
+                    System.out.println("Cancelled.");
+                    return;
+                }
+
+                patientService.deletePatient(ssnInput);
+
+                System.out.println("Patient deleted successfully.");
+                return;
+
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please try again.\n");
+            }
+        }
+    }
+
     private void deleteDoctor() {
         while (true) {
             try {
@@ -257,6 +288,7 @@ public class AdminPresentation extends AbstractMenuPresentation {
             }
         }
     }
+
 
     private void showAllDoctors() {
         System.out.println();
