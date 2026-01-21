@@ -28,6 +28,7 @@ User roles are handled through separate menus and workflows.
 <h3>Administrator</h3>
 <ul>
   <li>Add new patients</li>
+  <li>Delete patients</li>
   <li>View all patients</li>
   <li>Add new doctors</li>
   <li>Delete doctors</li>
